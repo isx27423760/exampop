@@ -129,6 +129,7 @@ Desde el host de l'escola fem :
 ```
 
 #### Comprovacio segura
+Amb telnet no es pot llavor ho fem ha openssl_client que hem treballat a classe.
 
 ```
 [isx27423760@i16 ~]$ openssl s_client -connect 35.178.244.131:995
