@@ -7,17 +7,25 @@ Podeu trobar els repositoris de l'examen [isx27423760](https://github.com/isx274
 
 
 Primer de tot entrem a una maquina de AWS:
+```
 [isx27423760@i16 ~]$ ssh -i .ssh/mykey.pem fedora@35.178.244.131
+```
 
 Un cop a dins:  
 Creem la xarxe interna per al pop
+```
 [fedora@ip-172-31-23-25 ~]$ docker network create popnet
+```
 
 descarreguem del nostre github del docker per crea la nostra imatge:
+```
 [fedora@ip-172-31-23-25 ~]$ git clone https://github.com/isx27423760/exampop.git
+```
 
 Contruim la imatge de popserver:
+```
 [fedora@ip-172-31-23-25 popserver:19]$ docker build -t francs2/m11franlin .
+```
 
 #### Execució
 Execucio amb els ports de pop i pop segur ja mapejats, el container estara en segon pla (datach).
@@ -25,29 +33,36 @@ Execucio amb els ports de pop i pop segur ja mapejats, el container estara en se
 docker run -p 110:110 -p 995:995 --rm --name popserver -h popserver --net popnet -d francs2/m11franlin 
 ```
 **NOTA : IMPORTANT**
+
 Obrir al securiy GROUP de AWS els ports per fer la consulta desde el host de l'aula 
 mes concretament els ports ssh (per conectarnos a nuestra maquina de aws) , y el 110 (POP3) y 995(POP3s).
 
 #### Comprovacio que els ports estan mapejats.
 Veime quina ip te el container docker
+```
 [isx27423760@i16 exampop]$ docker network inspect popnet 
 "IPv4Address": "172.19.0.2/16",
+```
 
 Veure quins ports esta oberts
+```
 [isx27423760@i16 exampop]$ nmap 172.19.0.2
 PORT     STATE SERVICE
 110/tcp  open  pop3
 995/tcp  open  pop3s
 ....
 ....
+```
 
 Veure desde fora si els ports estan mapejats:
+```
 [fedora@ip-172-31-23-25 popserver:19]$ nmap localhost
 .....
 PORT    STATE SERVICE
 22/tcp  open  ssh
 110/tcp open  pop3
 995/tcp open  pop3s
+```
 
 Com em obert els porta 110 i 995 del securyto group de la nostra maquina de amazon, 
 llavors podem fer consultas desde la escola directament a la ip publica de la AMI de AWS. 
